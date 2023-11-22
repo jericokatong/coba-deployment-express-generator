@@ -8,6 +8,13 @@ var indexRouter = require("./app/welcome/router");
 
 var app = express();
 
+// dokumentasi
+const swaggerUi = require("swagger-ui-express");
+const swaggerSpecs = require("./public/doc/filkom-api-doc.json");
+
+// Middleware untuk menampilkan Spesifikasi API dengan Swagger UI
+app.use("/api-doc", swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
+
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");

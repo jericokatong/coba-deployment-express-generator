@@ -1,0 +1,2758 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "title": "API FILKOM-APP",
+    "description": "OpenAPI untuk FILKOM APP RESTful API. API ini menggunakan Authentikasi JWT.",
+    "version": "1.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:2000/api/v1",
+      "description": "Development Server"
+    },
+    {
+      "url": "https://development-filkom-apps-be.vercel.app/api/v1",
+      "description": "Deployment Server"
+    }
+  ],
+  "paths": {
+    "/auth/me": {
+      "get": {
+        "security": [
+          {
+            "filkomAuth": []
+          }
+        ],
+        "tags": ["User Authentication"],
+        "summary": "",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "user": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string"
+                            },
+                            "name": {
+                              "type": "string"
+                            },
+                            "email": {
+                              "type": "string"
+                            },
+                            "role": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "iat": {
+                          "type": "integer"
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "status": "SUCCESS",
+                  "data": {
+                    "user": {
+                      "id": "6efa89b3-c086-4038-9ce9-68b99dbcb8bb",
+                      "name": "admin",
+                      "email": "admin@mail.com",
+                      "role": "ADMIN"
+                    },
+                    "iat": 1698201332
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Error Authentication",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeneralError"
+                },
+                "examples": {
+                  "Token Not Found": {
+                    "value": {
+                      "status": "FAILED",
+                      "data": {
+                        "error": "token not found"
+                      }
+                    }
+                  },
+                  "Token Expired": {
+                    "value": {
+                      "status": "FAILED",
+                      "data": {
+                        "error": "token expired"
+                      }
+                    }
+                  },
+                  "Invalid Token": {
+                    "value": {
+                      "status": "FAILED",
+                      "data": {
+                        "error": "invalid token"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/signin-admin": {
+      "post": {
+        "tags": ["User Authentication"],
+        "summary": "Login Admin",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                }
+              },
+              "example": {
+                "username": "admin",
+                "password": "12345"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Admin Sukses Login",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "user": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string"
+                            },
+                            "name": {
+                              "type": "string"
+                            },
+                            "email": {
+                              "type": "string"
+                            },
+                            "role": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "token": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "status": "SUCCESS",
+                  "data": {
+                    "user": {
+                      "id": "6efa89b3-c086-4038-9ce9-68b99dbcb8bb",
+                      "name": "admin",
+                      "email": "admin@mail.com",
+                      "role": "ADMIN"
+                    },
+                    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNmVmYTg5YjMtYzA4Ni00MDM4LTljZTktNjhiOTlkYmNiOGJiIiwibmFtZSI6ImFkbWluIiwiZW1haWwiOiJhZG1pbkBtYWlsLmNvbSIsInJvbGUiOiJBRE1JTiJ9LCJpYXQiOjE2OTgxOTY5MDZ9.dm6mLjb6FoNulb38DAOSlmOdfFZWRl8qYHPMs1VT3b4"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Client Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeneralError"
+                },
+                "example": {
+                  "status": "FAILED",
+                  "data": {
+                    "error": "email or password incorrect"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/signin-employee": {
+      "post": {
+        "tags": ["User Authentication"],
+        "summary": "Login Employee",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                }
+              },
+              "example": {
+                "username": "kaprodi",
+                "password": "12345"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Employee Sukses Login",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "user": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string"
+                            },
+                            "nik": {
+                              "type": "string"
+                            },
+                            "name": {
+                              "type": "string"
+                            },
+                            "role": {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        },
+                        "token": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "status": "SUCCESS",
+                  "data": {
+                    "user": {
+                      "id": "ab9eb72e-acf5-4497-a7cb-d898ec8cce55",
+                      "nik": "kaprodi",
+                      "name": "Kaprodi Kaprodi",
+                      "role": ["KAPRODI"]
+                    },
+                    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiYWI5ZWI3MmUtYWNmNS00NDk3LWE3Y2ItZDg5OGVjOGNjZTU1IiwibmlrIjoia2Fwcm9kaSIsIm5hbWUiOiJLYXByb2RpIEthcHJvZGkiLCJyb2xlIjpbIktBUFJPREkiXX0sImlhdCI6MTY5ODIwMTM0NX0.ZtMAK4H27692KG0SqFZdyVwrpXnnJIs9vF2wNvuyvUA"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Client Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeneralError"
+                },
+                "example": {
+                  "status": "FAILED",
+                  "data": {
+                    "error": "email or password incorrect"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/signin-student": {
+      "post": {
+        "tags": ["User Authentication"],
+        "summary": "Login Student",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                }
+              },
+              "example": {
+                "username": "student",
+                "password": "12345"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Student Sukses Login",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "user": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string"
+                            },
+                            "nim": {
+                              "type": "string"
+                            },
+                            "name": {
+                              "type": "string"
+                            },
+                            "status": {
+                              "type": "string"
+                            },
+                            "role": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "token": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "status": "SUCCESS",
+                  "data": {
+                    "user": {
+                      "id": "91c5d94a-600b-42bd-a470-e35a01f45639",
+                      "nim": "student",
+                      "name": "John Doe",
+                      "status": "ACTIVE",
+                      "role": "MAHASISWA"
+                    },
+                    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiOTFjNWQ5NGEtNjAwYi00MmJkLWE0NzAtZTM1YTAxZjQ1NjM5IiwibmltIjoic3R1ZGVudCIsIm5hbWUiOiJKb2huIERvZSIsInJvbGUiOlsiTUFIQVNJU1dBIl19LCJpYXQiOjE2OTgyMDE4Nzh9.as4GCkNFq6d5MDoTUUfX9bS4Bv_H7f_jGkOQ-FCjbjI"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Client Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeneralError"
+                },
+                "example": {
+                  "status": "FAILED",
+                  "data": {
+                    "error": "email or password incorrect"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/signout-admin": {
+      "post": {
+        "security": [
+          {
+            "filkomAuth": []
+          }
+        ],
+        "tags": ["User Authentication"],
+        "summary": "Logout Admin",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Sukses Logout",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "message": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "status": "OK",
+                  "data": {
+                    "message": "sign out success"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Error Authentication",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeneralError"
+                },
+                "examples": {
+                  "Token Not Found": {
+                    "value": {
+                      "status": "FAILED",
+                      "data": {
+                        "error": "token not found"
+                      }
+                    }
+                  },
+                  "Token Expired": {
+                    "value": {
+                      "status": "FAILED",
+                      "data": {
+                        "error": "token expired"
+                      }
+                    }
+                  },
+                  "Invalid Token": {
+                    "value": {
+                      "status": "FAILED",
+                      "data": {
+                        "error": "invalid token"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/signout-employee": {
+      "post": {
+        "security": [
+          {
+            "filkomAuth": []
+          }
+        ],
+        "tags": ["User Authentication"],
+        "summary": "Logout Employee",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Sukses Logout",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "message": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "status": "OK",
+                  "data": {
+                    "message": "sign out success"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Error Authentication",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeneralError"
+                },
+                "examples": {
+                  "Token Not Found": {
+                    "value": {
+                      "status": "FAILED",
+                      "data": {
+                        "error": "token not found"
+                      }
+                    }
+                  },
+                  "Token Expired": {
+                    "value": {
+                      "status": "FAILED",
+                      "data": {
+                        "error": "token expired"
+                      }
+                    }
+                  },
+                  "Invalid Token": {
+                    "value": {
+                      "status": "FAILED",
+                      "data": {
+                        "error": "invalid token"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/signout-student": {
+      "post": {
+        "security": [
+          {
+            "filkomAuth": []
+          }
+        ],
+        "tags": ["User Authentication"],
+        "summary": "Logout Student",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Sukses Logout",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "message": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "status": "OK",
+                  "data": {
+                    "message": "sign out success"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Error Authentication",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeneralError"
+                },
+                "examples": {
+                  "Token Not Found": {
+                    "value": {
+                      "status": "FAILED",
+                      "data": {
+                        "error": "token not found"
+                      }
+                    }
+                  },
+                  "Token Expired": {
+                    "value": {
+                      "status": "FAILED",
+                      "data": {
+                        "error": "token expired"
+                      }
+                    }
+                  },
+                  "Invalid Token": {
+                    "value": {
+                      "status": "FAILED",
+                      "data": {
+                        "error": "invalid token"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/spt/detail/id/{id}": {
+      "get": {
+        "tags": ["Klabat Bridge"],
+        "summary": "== SPT ==",
+        "description": "Melihat SPT berdasarkan id SPT",
+        "parameters": [
+          {
+            "name": "id",
+            "description": "ID SPT",
+            "required": true,
+            "example": "c6c4a805-d7c1-4448-998d-8b0f3f6752b5",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sukses mendapatkan spt berdasarkan id SPT",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "nik": {
+                          "type": "string"
+                        },
+                        "birth_mother": {
+                          "type": "string"
+                        },
+                        "graduate_plan": {
+                          "type": "string"
+                        },
+                        "graduate_year": {
+                          "type": "string"
+                        },
+                        "minor": {
+                          "type": "string"
+                        },
+                        "remaining_credits": {
+                          "type": "string"
+                        },
+                        "remaining_classes": {
+                          "type": "string"
+                        },
+                        "approval_fac": {
+                          "type": "string"
+                        },
+                        "approval_reg": {
+                          "type": "string"
+                        },
+                        "created_at": {
+                          "type": "string"
+                        },
+                        "updated_at": {
+                          "type": "string"
+                        },
+                        "studentId": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "status": "OK",
+                  "data": {
+                    "id": "c6c4a805-d7c1-4448-998d-8b0f3f6752b5",
+                    "full_name": "Gracias Tumudo",
+                    "reg_num": "s22000123",
+                    "date_of_birth": "17 November 2000",
+                    "gender": "FEMALE",
+                    "nim": "123456",
+                    "faculty": "Fakultas Ilmu Komputer",
+                    "major": "Informatika",
+                    "phone_num": "",
+                    "nik": "12343567",
+                    "birth_mother": "Ariana",
+                    "graduate_plan": "Semester II 2023/2024",
+                    "minor": null,
+                    "remaining_credits": "3",
+                    "remaining_classes": "[{\"subject\":\"IGD\",\"sks\":\"3\",\"keterangan\":\"Summer 2023\"},{\"subject\":\"Entre\",\"sks\":\"3\",\"keterangan\":\"Semester II 2023/2024\"},{\"subject\":\"Web Design\",\"sks\":\"3\",\"keterangan\":\"Summer 2023\"},{\"subject\":\"Math\",\"sks\":\"3\",\"keterangan\":\"Semester II 2023/2024\"},{\"subject\":\"Family Living\",\"sks\":\"3\",\"keterangan\":\"Semester II 2023/2024\"}]",
+                    "approval_fac": "WAITING",
+                    "approval_reg": "WAITING",
+                    "created_at": "2023-11-05T07:33:53.639Z",
+                    "updated_at": null,
+                    "studentId": "123456"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/spt": {
+      "get": {
+        "tags": ["Klabat Bridge"],
+        "summary": "== SPT ==",
+        "description": "Mengambil semua data SPT. SPT adalah Surat Permohonan Tamat.",
+        "responses": {
+          "200": {
+            "description": "Sukses Mendapat semua data SPT",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "nik": {
+                            "type": "string"
+                          },
+                          "birth_mother": {
+                            "type": "string"
+                          },
+                          "graduate_plan": {
+                            "type": "string"
+                          },
+                          "graduate_year": {
+                            "type": "string"
+                          },
+                          "minor": {
+                            "type": "string"
+                          },
+                          "remaining_credits": {
+                            "type": "string"
+                          },
+                          "remaining_classes": {
+                            "type": "string"
+                          },
+                          "approval_fac": {
+                            "type": "string"
+                          },
+                          "approval_req": {
+                            "type": "string"
+                          },
+                          "created_at": {
+                            "type": "string"
+                          },
+                          "updated_at": {
+                            "type": "string"
+                          },
+                          "studentId": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "status": "OK",
+                  "data": [
+                    {
+                      "id": "c6c4a805-d7c1-4448-998d-8b0f3f6752b5",
+                      "full_name": "Gracias Tumudo",
+                      "reg_num": "s22000123",
+                      "date_of_birth": "17 November 2000",
+                      "gender": "FEMALE",
+                      "nim": "123456",
+                      "faculty": "Fakultas Ilmu Komputer",
+                      "major": "Informatika",
+                      "phone_num": "",
+                      "nik": "12343567",
+                      "birth_mother": "Ariana",
+                      "graduate_plan": "Semester II 2023/2024",
+                      "minor": null,
+                      "remaining_credits": "3",
+                      "remaining_classes": "[{\"subject\":\"IGD\",\"sks\":\"3\",\"keterangan\":\"Summer 2023\"},{\"subject\":\"Entre\",\"sks\":\"3\",\"keterangan\":\"Semester II 2023/2024\"},{\"subject\":\"Web Design\",\"sks\":\"3\",\"keterangan\":\"Summer 2023\"},{\"subject\":\"Math\",\"sks\":\"3\",\"keterangan\":\"Semester II 2023/2024\"},{\"subject\":\"Family Living\",\"sks\":\"3\",\"keterangan\":\"Semester II 2023/2024\"}]",
+                      "approval_fac": "WAITING",
+                      "approval_reg": "WAITING",
+                      "created_at": "2023-11-05T07:33:53.639Z",
+                      "updated_at": null,
+                      "studentId": "student"
+                    },
+                    {
+                      "id": "deb134b6-b141-4b69-a4a7-e65b63c60731",
+                      "full_name": "Reynaldo XXXX",
+                      "reg_num": "s229877888",
+                      "date_of_birth": "20 Desember 2000",
+                      "gender": "MALE",
+                      "nim": "098754321",
+                      "faculty": "Fakultas Ilmu Komputer",
+                      "major": "Informatika",
+                      "phone_num": "",
+                      "nik": "0987654321",
+                      "birth_mother": "Briana",
+                      "graduate_plan": "Semester II 2023/2024",
+                      "minor": null,
+                      "remaining_credits": "15",
+                      "remaining_classes": "[{\"subject\":\"IGD\",\"sks\":\"3\",\"keterangan\":\"Summer 2023\"},{\"subject\":\"Entre\",\"sks\":\"3\",\"keterangan\":\"Semester II 2023/2024\"},{\"subject\":\"Web Design\",\"sks\":\"3\",\"keterangan\":\"Summer 2023\"},{\"subject\":\"Math\",\"sks\":\"3\",\"keterangan\":\"Semester II 2023/2024\"},{\"subject\":\"Family Living\",\"sks\":\"3\",\"keterangan\":\"Semester II 2023/2024\"}]",
+                      "approval_fac": "WAITING",
+                      "approval_reg": "WAITING",
+                      "created_at": "2023-11-05T07:33:53.639Z",
+                      "updated_at": null,
+                      "studentId": "student"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Klabat Bridge"],
+        "summary": "== SPT ==",
+        "description": "Submit SPT",
+        "requestBody": {
+          "required": true,
+          "description": "field yang diperlukan untuk buat SPT. Terutama studentId sangat penting untuk menandakan student yang membuat SPT tersebut.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "full_name": {
+                    "type": "string"
+                  },
+                  "reg_num": {
+                    "type": "string"
+                  },
+                  "date_of_birth": {
+                    "type": "string"
+                  },
+                  "gender": {
+                    "type": "string"
+                  },
+                  "nik": {
+                    "type": "string"
+                  },
+                  "nim": {
+                    "type": "string"
+                  },
+                  "faculty": {
+                    "type": "string"
+                  },
+                  "major": {
+                    "type": "string"
+                  },
+
+                  "minor": {
+                    "type": "string"
+                  },
+                  "birth_mother": {
+                    "type": "string"
+                  },
+                  "phone_num": {
+                    "type": "string"
+                  },
+                  "personal_email": {
+                    "type": "string"
+                  },
+                  "remaining_classes": {
+                    "type": "string"
+                  },
+                  "remaining_credits": {
+                    "type": "string"
+                  },
+                  "studentId": {
+                    "type": "string"
+                  }
+                }
+              },
+              "example": {
+                "full_name": "Angel Triany Pangkey",
+                "reg_num": "s2212345",
+                "date_of_birth": "17 November 2002",
+                "gender": "FEMALE",
+                "nik": "876556789",
+                "nim": "10502201014",
+                "faculty": "Fakultas Ilmu Komputer",
+                "major": "Informatika",
+                "minor": "",
+                "birth_mother": "Sheren",
+                "phone_num": "09887654567",
+                "personal_email": "angel@gmail.com",
+                "remaining_classes": "[{subject: 'Web Design', sks: '3', keterangan: 'Summer 2023'}, {subject: 'Agama', sks: '3', keterangan: 'Summer 2023'}, {subject: 'FrontEnd', sks: '3', keterangan: 'Semester II 2023/2024'}, {subject: 'Math', sks: '3', keterangan: 'Semester II 2023/2024'}, {subject: 'Family Living', sks: '3', keterangan: 'Semester II 2023/2024'}]",
+                "remaining_credits": "3",
+                "studentId": "10502201014"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Berhasil Membuat SPT",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "full_name": {
+                          "type": "string"
+                        },
+                        "reg_num": {
+                          "type": "string"
+                        },
+                        "date_of_birth": {
+                          "type": "string"
+                        },
+                        "gender": {
+                          "type": "string"
+                        },
+                        "nim": {
+                          "type": "string"
+                        },
+                        "faculty": {
+                          "type": "string"
+                        },
+                        "major": {
+                          "type": "string"
+                        },
+                        "phone_num": {
+                          "type": "string"
+                        },
+                        "personal_email": {
+                          "type": "string"
+                        },
+                        "nik": {
+                          "type": "string"
+                        },
+                        "birth_mother": {
+                          "type": "string"
+                        },
+                        "graduate_plan": {
+                          "type": "string"
+                        },
+                        "minor": {
+                          "type": "string"
+                        },
+
+                        "remaining_credits": {
+                          "type": "string"
+                        },
+                        "remaining_classes": {
+                          "type": "string"
+                        },
+                        "approval_fac": {
+                          "type": "string"
+                        },
+                        "approval_reg": {
+                          "type": "string"
+                        },
+                        "created_at": {
+                          "type": "string"
+                        },
+                        "updated_at": {
+                          "type": "string"
+                        },
+                        "studentId": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "status": "Form SPT has been submitted",
+                  "data": {
+                    "id": "ea9899d0-fd5d-4163-83b6-b828e582bc2c",
+                    "full_name": "Angel Triany Pangkey",
+                    "reg_num": "s2212345",
+                    "date_of_birth": "17 November 2002",
+                    "gender": "FEMALE",
+                    "nim": "10502201014",
+                    "faculty": "Fakultas Ilmu Komputer",
+                    "major": "Informatika",
+                    "phone_num": "09887654567",
+                    "personal_email": "angel@gmail.com",
+                    "nik": "876556789",
+                    "birth_mother": "Sheren",
+                    "graduate_plan": "Semester II 2023/2024",
+                    "minor": "",
+                    "remaining_credits": "3",
+                    "remaining_classes": "[{subject: 'Web Design', sks: '3', keterangan: 'Summer 2023'}, {subject: 'Agama', sks: '3', keterangan: 'Summer 2023'}, {subject: 'FrontEnd', sks: '3', keterangan: 'Semester II 2023/2024'}, {subject: 'Math', sks: '3', keterangan: 'Semester II 2023/2024'}, {subject: 'Family Living', sks: '3', keterangan: 'Semester II 2023/2024'}]",
+                    "approval_fac": "WAITING",
+                    "approval_reg": "WAITING",
+                    "created_at": "2023-11-05T10:04:40.084Z",
+                    "updated_at": null,
+                    "studentId": "10502201014"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/spt/fac-approval/{id}?status=": {
+      "patch": {
+        "tags": ["Klabat Bridge"],
+        "summary": "== SPT ==",
+        "description": "Update status SPT dari Fakultas. Status bisa APPROVED dan REJECTED. contoh endpoint: /spt/fak-approval/:id?status=APPROVED",
+        "parameters": [
+          {
+            "name": "id",
+            "description": "id SPT",
+            "required": true,
+            "example": "9bbfe127-5555-40b7-b321-c8ac321bcd3a",
+            "in": "path"
+          },
+          {
+            "name": "status",
+            "description": "APPROVED atau REJECTED",
+            "required": true,
+            "example": "APPROVED",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sukses Update Status SPT",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "full_name": {
+                          "type": "string"
+                        },
+                        "reg_num": {
+                          "type": "string"
+                        },
+                        "date_of_birth": {
+                          "type": "string"
+                        },
+                        "gender": {
+                          "type": "string"
+                        },
+                        "nim": {
+                          "type": "string"
+                        },
+                        "faculty": {
+                          "type": "string"
+                        },
+                        "major": {
+                          "type": "string"
+                        },
+                        "phone_num": {
+                          "type": "string"
+                        },
+                        "personal_email": {
+                          "type": "string"
+                        },
+                        "nik": {
+                          "type": "string"
+                        },
+                        "birth_mother": {
+                          "type": "string"
+                        },
+                        "graduate_plan": {
+                          "type": "string"
+                        },
+                        "minor": {
+                          "type": "string"
+                        },
+                        "remaining_credits": {
+                          "type": "string"
+                        },
+                        "remaining_classes": {
+                          "type": "string"
+                        },
+                        "approval_fac": {
+                          "type": "string"
+                        },
+                        "approval_reg": {
+                          "type": "string"
+                        },
+                        "created_at": {
+                          "type": "string"
+                        },
+                        "updated_at": {
+                          "type": "string"
+                        },
+                        "studentId": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "status": "OK",
+                  "data": {
+                    "id": "ea9899d0-fd5d-4163-83b6-b828e582bc2c",
+                    "full_name": "Angel Triany Pangkey",
+                    "reg_num": "s2212345",
+                    "date_of_birth": "17 November 2002",
+                    "gender": "FEMALE",
+                    "nim": "10502201014",
+                    "faculty": "Fakultas Ilmu Komputer",
+                    "major": "Informatika",
+                    "phone_num": "09887654567",
+                    "personal_email": "angel@gmail.com",
+                    "nik": "876556789",
+                    "birth_mother": "Sheren",
+                    "graduate_plan": "Semester II 2023/2024",
+                    "minor": "",
+                    "remaining_credits": "3",
+                    "remaining_classes": "[{subject: 'Web Design', sks: '3', keterangan: 'Summer 2023'}, {subject: 'Agama', sks: '3', keterangan: 'Summer 2023'}, {subject: 'FrontEnd', sks: '3', keterangan: 'Semester II 2023/2024'}, {subject: 'Math', sks: '3', keterangan: 'Semester II 2023/2024'}, {subject: 'Family Living', sks: '3', keterangan: 'Semester II 2023/2024'}]",
+                    "approval_fac": "APPROVED",
+                    "approval_reg": "WAITING",
+                    "created_at": "2023-11-05T10:04:40.084Z",
+                    "updated_at": null,
+                    "studentId": "10502201014"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/spt/reg-approval/{id}?status=": {
+      "patch": {
+        "tags": ["Klabat Bridge"],
+        "summary": "== SPT ==",
+        "description": "Update status SPT dari Registrar. Status bisa APPROVED dan REJECTED. contoh endpoint: /spt/fak-approval/:id?status=APPROVED",
+        "parameters": [
+          {
+            "name": "id",
+            "description": "id SPT",
+            "required": true,
+            "example": "9bbfe127-5555-40b7-b321-c8ac321bcd3a",
+            "in": "path"
+          },
+          {
+            "name": "status",
+            "description": "APPROVED atau REJECTED",
+            "required": true,
+            "example": "APPROVED",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sukses Update Status SPT",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "full_name": {
+                          "type": "string"
+                        },
+                        "reg_num": {
+                          "type": "string"
+                        },
+                        "date_of_birth": {
+                          "type": "string"
+                        },
+                        "gender": {
+                          "type": "string"
+                        },
+                        "nim": {
+                          "type": "string"
+                        },
+                        "faculty": {
+                          "type": "string"
+                        },
+                        "major": {
+                          "type": "string"
+                        },
+                        "phone_num": {
+                          "type": "string"
+                        },
+                        "personal_email": {
+                          "type": "string"
+                        },
+
+                        "nik": {
+                          "type": "string"
+                        },
+                        "birth_mother": {
+                          "type": "string"
+                        },
+                        "graduate_plan": {
+                          "type": "string"
+                        },
+                        "minor": {
+                          "type": "string"
+                        },
+                        "remaining_credits": {
+                          "type": "string"
+                        },
+                        "remaining_classes": {
+                          "type": "string"
+                        },
+                        "approval_fac": {
+                          "type": "string"
+                        },
+                        "approval_reg": {
+                          "type": "string"
+                        },
+                        "created_at": {
+                          "type": "string"
+                        },
+                        "updated_at": {
+                          "type": "string"
+                        },
+                        "studentId": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "status": "OK",
+                  "data": {
+                    "id": "ea9899d0-fd5d-4163-83b6-b828e582bc2c",
+                    "full_name": "Angel Triany Pangkey",
+                    "reg_num": "s2212345",
+                    "date_of_birth": "17 November 2002",
+                    "gender": "FEMALE",
+                    "nim": "10502201014",
+                    "faculty": "Fakultas Ilmu Komputer",
+                    "major": "Informatika",
+                    "phone_num": "09887654567",
+                    "personal_email": "angel@gmail.com",
+                    "nik": "876556789",
+                    "birth_mother": "Sheren",
+                    "graduate_plan": "Semester II 2023/2024",
+                    "minor": "",
+                    "remaining_credits": "3",
+                    "remaining_classes": "[{subject: 'Web Design', sks: '3', keterangan: 'Summer 2023'}, {subject: 'Agama', sks: '3', keterangan: 'Summer 2023'}, {subject: 'FrontEnd', sks: '3', keterangan: 'Semester II 2023/2024'}, {subject: 'Math', sks: '3', keterangan: 'Semester II 2023/2024'}, {subject: 'Family Living', sks: '3', keterangan: 'Semester II 2023/2024'}]",
+                    "approval_fac": "APPROVED",
+                    "approval_reg": "APPROVED",
+                    "created_at": "2023-11-05T10:04:40.084Z",
+                    "updated_at": null,
+                    "studentId": "10502201014"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/dashboard/statistic": {
+      "get": {
+        "tags": ["Klabat Bridge"],
+        "summary": "== Dasboard ==",
+        "description": "Dashboard Statistik pada page admin, fakultas dan operator.",
+        "responses": {
+          "200": {
+            "description": "Berhasil mendapat statistik untuk total alumni, total total alumni, total alumni informatika, total alumni sistem informasi, distribusi alumni dan total tracer study yang telah diisi.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "totalAlumni": {
+                          "type": "integer"
+                        },
+                        "totalAlumniIF": {
+                          "type": "integer"
+                        },
+                        "totalAlumniSI": {
+                          "type": "integer"
+                        },
+                        "distribusiAlumni": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "graduateYear": {
+                                "type": "string"
+                              },
+                              "major": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "name": {
+                                      "type": "string"
+                                    },
+                                    "count": {
+                                      "type": "integer"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "totalTS": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "major": {
+                                "type": "string"
+                              },
+                              "count": {
+                                "type": "integer"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "status": "OK",
+                  "data": {
+                    "totalAlumni": 20,
+                    "totalAlumniIF": 9,
+                    "totalAlumniSI": 11,
+                    "distribusiAlumni": [
+                      {
+                        "graduateYear": "2022",
+                        "major": [
+                          {
+                            "name": "SI",
+                            "count": 5
+                          },
+                          {
+                            "name": "IF",
+                            "count": 5
+                          }
+                        ]
+                      },
+                      {
+                        "graduateYear": "2023",
+                        "major": [
+                          {
+                            "name": "SI",
+                            "count": 6
+                          },
+                          {
+                            "name": "IF",
+                            "count": 4
+                          }
+                        ]
+                      }
+                    ],
+                    "totalTS": [
+                      {
+                        "major": "IF",
+                        "count": 9
+                      },
+                      {
+                        "major": "SI",
+                        "count": 6
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/fakultas/alumni?search_query=": {
+      "get": {
+        "tags": ["Klabat Bridge"],
+        "summary": "== ALUMNI ==",
+        "description": "Mendapatkan semua alumni. Tidak ada hubungan dengan tracer study",
+        "parameters": [
+          {
+            "name": "search_query",
+            "description": "Cari berdasarkan nama dan nim",
+            "required": false,
+            "example": "jer",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Berhasil mendapatkan semua alumni",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "firstName": {
+                            "type": "string"
+                          },
+                          "lastName": {
+                            "type": "string"
+                          },
+                          "nim": {
+                            "type": "string"
+                          },
+                          "major": {
+                            "type": "string"
+                          },
+                          "faculty": {
+                            "type": "string"
+                          },
+                          "graduate_year": {
+                            "type": "string"
+                          },
+                          "personalEmail": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "status": "OK",
+                  "data": [
+                    {
+                      "firstName": "Stirling",
+                      "lastName": "Branchflower",
+                      "nim": "20502201001",
+                      "major": "IF",
+                      "faculty": "Fakultas Ilmu Komputer",
+                      "graduate_year": "2022",
+                      "personalEmail": null
+                    },
+                    {
+                      "firstName": "Julina",
+                      "lastName": "Breton",
+                      "nim": "20502201002",
+                      "major": "IF",
+                      "faculty": "Fakultas Ilmu Komputer",
+                      "graduate_year": "2022",
+                      "personalEmail": null
+                    },
+                    {
+                      "firstName": "Koenraad",
+                      "lastName": "Tolliday",
+                      "nim": "20502201003",
+                      "major": "IF",
+                      "faculty": "Fakultas Ilmu Komputer",
+                      "graduate_year": "2022",
+                      "personalEmail": null
+                    },
+                    {
+                      "firstName": "Rad",
+                      "lastName": "Beverstock",
+                      "nim": "20502201004",
+                      "major": "IF",
+                      "faculty": "Fakultas Ilmu Komputer",
+                      "graduate_year": "2022",
+                      "personalEmail": null
+                    },
+                    {
+                      "firstName": "Gene",
+                      "lastName": "Trobe",
+                      "nim": "20502201005",
+                      "major": "IF",
+                      "faculty": "Fakultas Ilmu Komputer",
+                      "graduate_year": "2022",
+                      "personalEmail": null
+                    },
+                    {
+                      "firstName": "Stewart",
+                      "lastName": "Heasman",
+                      "nim": "20502201006",
+                      "major": "SI",
+                      "faculty": "Fakultas Ilmu Komputer",
+                      "graduate_year": "2022",
+                      "personalEmail": null
+                    },
+                    {
+                      "firstName": "Maxim",
+                      "lastName": "holmes",
+                      "nim": "20502201007",
+                      "major": "SI",
+                      "faculty": "Fakultas Ilmu Komputer",
+                      "graduate_year": "2022",
+                      "personalEmail": null
+                    },
+                    {
+                      "firstName": "Sheilakathryn",
+                      "lastName": "Heppner",
+                      "nim": "20502201008",
+                      "major": "SI",
+                      "faculty": "Fakultas Ilmu Komputer",
+                      "graduate_year": "2022",
+                      "personalEmail": null
+                    },
+                    {
+                      "firstName": "Adelle",
+                      "lastName": "Macvain",
+                      "nim": "20502201009",
+                      "major": "SI",
+                      "faculty": "Fakultas Ilmu Komputer",
+                      "graduate_year": "2022",
+                      "personalEmail": null
+                    },
+                    {
+                      "firstName": "Estevan",
+                      "lastName": "Kingswood",
+                      "nim": "20502201010",
+                      "major": "SI",
+                      "faculty": "Fakultas Ilmu Komputer",
+                      "graduate_year": "2022",
+                      "personalEmail": null
+                    },
+                    {
+                      "firstName": "Tybalt",
+                      "lastName": "Champneys",
+                      "nim": "20502201011",
+                      "major": "IF",
+                      "faculty": "Fakultas Ilmu Komputer",
+                      "graduate_year": "2023",
+                      "personalEmail": null
+                    },
+                    {
+                      "firstName": "Egor",
+                      "lastName": "Smaling",
+                      "nim": "20502201012",
+                      "major": "SI",
+                      "faculty": "Fakultas Ilmu Komputer",
+                      "graduate_year": "2023",
+                      "personalEmail": null
+                    },
+                    {
+                      "firstName": "Jerrie",
+                      "lastName": "Bushnell",
+                      "nim": "20502201013",
+                      "major": "IF",
+                      "faculty": "Fakultas Ilmu Komputer",
+                      "graduate_year": "2023",
+                      "personalEmail": null
+                    },
+                    {
+                      "firstName": "Calli",
+                      "lastName": "Gallehawk",
+                      "nim": "20502201014",
+                      "major": "IF",
+                      "faculty": "Fakultas Ilmu Komputer",
+                      "graduate_year": "2023",
+                      "personalEmail": null
+                    },
+                    {
+                      "firstName": "Lucilia",
+                      "lastName": "Chittey",
+                      "nim": "20502201015",
+                      "major": "IF",
+                      "faculty": "Fakultas Ilmu Komputer",
+                      "graduate_year": "2023",
+                      "personalEmail": null
+                    },
+                    {
+                      "firstName": "Rowan",
+                      "lastName": "Origin",
+                      "nim": "20502201016",
+                      "major": "SI",
+                      "faculty": "Fakultas Ilmu Komputer",
+                      "graduate_year": "2023",
+                      "personalEmail": null
+                    },
+                    {
+                      "firstName": "Norine",
+                      "lastName": "Aubrun",
+                      "nim": "20502201017",
+                      "major": "SI",
+                      "faculty": "Fakultas Ilmu Komputer",
+                      "graduate_year": "2023",
+                      "personalEmail": null
+                    },
+                    {
+                      "firstName": "Sarina",
+                      "lastName": "Fulmen",
+                      "nim": "20502201018",
+                      "major": "SI",
+                      "faculty": "Fakultas Ilmu Komputer",
+                      "graduate_year": "2023",
+                      "personalEmail": null
+                    },
+                    {
+                      "firstName": "Rachele",
+                      "lastName": "Skillett",
+                      "nim": "20502201019",
+                      "major": "SI",
+                      "faculty": "Fakultas Ilmu Komputer",
+                      "graduate_year": "2023",
+                      "personalEmail": null
+                    },
+                    {
+                      "firstName": "Gayle",
+                      "lastName": "Wardhough",
+                      "nim": "20502201020",
+                      "major": "SI",
+                      "faculty": "Fakultas Ilmu Komputer",
+                      "graduate_year": "2023",
+                      "personalEmail": null
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin-operator/alumni?search_query=": {
+      "get": {
+        "tags": ["Klabat Bridge"],
+        "summary": "== ALUMNI",
+        "description": "Mendapat semua alumni beserta status sudah mengisi tracer study atau belum",
+        "parameters": [
+          {
+            "name": "search_query",
+            "description": "Cari berdasarkan nama dan nim",
+            "required": false,
+            "example": "jer",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Berhasil mendapat data alumni beserta status pengisian tracer study",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "firstName": {
+                            "type": "string"
+                          },
+                          "lastName": {
+                            "type": "string"
+                          },
+                          "nim": {
+                            "type": "string"
+                          },
+                          "major": {
+                            "type": "string"
+                          },
+                          "faculty": {
+                            "type": "string"
+                          },
+                          "graduate_year": {
+                            "type": "string"
+                          },
+                          "status": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "status": "OK",
+                  "data": [
+                    {
+                      "firstName": "Stirling",
+                      "lastName": "Branchflower",
+                      "nim": "20502201001",
+                      "major": "IF",
+                      "faculty": "Fakultas Ilmu Komputer",
+                      "graduate_year": "2022",
+                      "status": "Sudah Mengisi"
+                    },
+                    {
+                      "firstName": "Julina",
+                      "lastName": "Breton",
+                      "nim": "20502201002",
+                      "major": "IF",
+                      "faculty": "Fakultas Ilmu Komputer",
+                      "graduate_year": "2022",
+                      "status": "Sudah Mengisi"
+                    },
+                    {
+                      "firstName": "Koenraad",
+                      "lastName": "Tolliday",
+                      "nim": "20502201003",
+                      "major": "IF",
+                      "faculty": "Fakultas Ilmu Komputer",
+                      "graduate_year": "2022",
+                      "status": "Sudah Mengisi"
+                    },
+                    {
+                      "firstName": "Rad",
+                      "lastName": "Beverstock",
+                      "nim": "20502201004",
+                      "major": "IF",
+                      "faculty": "Fakultas Ilmu Komputer",
+                      "graduate_year": "2022",
+                      "status": "Sudah Mengisi"
+                    },
+                    {
+                      "firstName": "Gene",
+                      "lastName": "Trobe",
+                      "nim": "20502201005",
+                      "major": "IF",
+                      "faculty": "Fakultas Ilmu Komputer",
+                      "graduate_year": "2022",
+                      "status": "Sudah Mengisi"
+                    },
+                    {
+                      "firstName": "Stewart",
+                      "lastName": "Heasman",
+                      "nim": "20502201006",
+                      "major": "SI",
+                      "faculty": "Fakultas Ilmu Komputer",
+                      "graduate_year": "2022",
+                      "status": "Sudah Mengisi"
+                    },
+                    {
+                      "firstName": "Maxim",
+                      "lastName": "holmes",
+                      "nim": "20502201007",
+                      "major": "SI",
+                      "faculty": "Fakultas Ilmu Komputer",
+                      "graduate_year": "2022",
+                      "status": "Sudah Mengisi"
+                    },
+                    {
+                      "firstName": "Sheilakathryn",
+                      "lastName": "Heppner",
+                      "nim": "20502201008",
+                      "major": "SI",
+                      "faculty": "Fakultas Ilmu Komputer",
+                      "graduate_year": "2022",
+                      "status": "Sudah Mengisi"
+                    },
+                    {
+                      "firstName": "Adelle",
+                      "lastName": "Macvain",
+                      "nim": "20502201009",
+                      "major": "SI",
+                      "faculty": "Fakultas Ilmu Komputer",
+                      "graduate_year": "2022",
+                      "status": "Sudah Mengisi"
+                    },
+                    {
+                      "firstName": "Estevan",
+                      "lastName": "Kingswood",
+                      "nim": "20502201010",
+                      "major": "SI",
+                      "faculty": "Fakultas Ilmu Komputer",
+                      "graduate_year": "2022",
+                      "status": "Sudah Mengisi"
+                    },
+                    {
+                      "firstName": "Tybalt",
+                      "lastName": "Champneys",
+                      "nim": "20502201011",
+                      "major": "IF",
+                      "faculty": "Fakultas Ilmu Komputer",
+                      "graduate_year": "2023",
+                      "status": "Sudah Mengisi"
+                    },
+                    {
+                      "firstName": "Egor",
+                      "lastName": "Smaling",
+                      "nim": "20502201012",
+                      "major": "SI",
+                      "faculty": "Fakultas Ilmu Komputer",
+                      "graduate_year": "2023",
+                      "status": "Sudah Mengisi"
+                    },
+                    {
+                      "firstName": "Jerrie",
+                      "lastName": "Bushnell",
+                      "nim": "20502201013",
+                      "major": "IF",
+                      "faculty": "Fakultas Ilmu Komputer",
+                      "graduate_year": "2023",
+                      "status": "Sudah Mengisi"
+                    },
+                    {
+                      "firstName": "Calli",
+                      "lastName": "Gallehawk",
+                      "nim": "20502201014",
+                      "major": "IF",
+                      "faculty": "Fakultas Ilmu Komputer",
+                      "graduate_year": "2023",
+                      "status": "Sudah Mengisi"
+                    },
+                    {
+                      "firstName": "Lucilia",
+                      "lastName": "Chittey",
+                      "nim": "20502201015",
+                      "major": "IF",
+                      "faculty": "Fakultas Ilmu Komputer",
+                      "graduate_year": "2023",
+                      "status": "Sudah Mengisi"
+                    },
+                    {
+                      "firstName": "Rowan",
+                      "lastName": "Origin",
+                      "nim": "20502201016",
+                      "major": "SI",
+                      "faculty": "Fakultas Ilmu Komputer",
+                      "graduate_year": "2023",
+                      "status": "Belum Mengisi"
+                    },
+                    {
+                      "firstName": "Norine",
+                      "lastName": "Aubrun",
+                      "nim": "20502201017",
+                      "major": "SI",
+                      "faculty": "Fakultas Ilmu Komputer",
+                      "graduate_year": "2023",
+                      "status": "Belum Mengisi"
+                    },
+                    {
+                      "firstName": "Sarina",
+                      "lastName": "Fulmen",
+                      "nim": "20502201018",
+                      "major": "SI",
+                      "faculty": "Fakultas Ilmu Komputer",
+                      "graduate_year": "2023",
+                      "status": "Belum Mengisi"
+                    },
+                    {
+                      "firstName": "Rachele",
+                      "lastName": "Skillett",
+                      "nim": "20502201019",
+                      "major": "SI",
+                      "faculty": "Fakultas Ilmu Komputer",
+                      "graduate_year": "2023",
+                      "status": "Belum Mengisi"
+                    },
+                    {
+                      "firstName": "Gayle",
+                      "lastName": "Wardhough",
+                      "nim": "20502201020",
+                      "major": "SI",
+                      "faculty": "Fakultas Ilmu Komputer",
+                      "graduate_year": "2023",
+                      "status": "Belum Mengisi"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tracer-study": {
+      "post": {
+        "tags": ["Klabat Bridge"],
+        "summary": "== Tracer Study ==",
+        "description": "alumni Submit form tracer study",
+        "requestBody": {
+          "required": true,
+          "description": "studentId untuk menandakan yang telah mengisi form tracer study",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "nimhsmsmh": {
+                    "type": "string"
+                  },
+                  "kdptimsmh": {
+                    "type": "string"
+                  },
+                  "tahun_lulus": {
+                    "type": "string"
+                  },
+                  "kdpstmsmh": {
+                    "type": "string"
+                  },
+                  "nmmhsmsmh": {
+                    "type": "string"
+                  },
+                  "telpomsmh": {
+                    "type": "string"
+                  },
+                  "emailmsmh": {
+                    "type": "string"
+                  },
+                  "nik": {
+                    "type": "string"
+                  },
+                  "npwp": {
+                    "type": "string"
+                  },
+                  "f8": {
+                    "type": "string"
+                  },
+                  "f504": {
+                    "type": "string"
+                  },
+                  "f502": {
+                    "type": "string"
+                  },
+                  "f505": {
+                    "type": "string"
+                  },
+                  "f506": {
+                    "type": "string"
+                  },
+                  "f5a1": {
+                    "type": "string"
+                  },
+                  "f5a2": {
+                    "type": "string"
+                  },
+                  "f1101": {
+                    "type": "string"
+                  },
+                  "f1102": {
+                    "type": "string"
+                  },
+                  "f5b": {
+                    "type": "string"
+                  },
+                  "f5c": {
+                    "type": "string"
+                  },
+                  "f5d": {
+                    "type": "string"
+                  },
+                  "f18a": {
+                    "type": "string"
+                  },
+                  "f18b": {
+                    "type": "string"
+                  },
+                  "f18c": {
+                    "type": "string"
+                  },
+                  "f18d": {
+                    "type": "string"
+                  },
+                  "f1201": {
+                    "type": "string"
+                  },
+                  "f1202": {
+                    "type": "string"
+                  },
+                  "f14": {
+                    "type": "string"
+                  },
+                  "f15": {
+                    "type": "string"
+                  },
+                  "f1761": {
+                    "type": "string"
+                  },
+                  "f1762": {
+                    "type": "string"
+                  },
+                  "f1763": {
+                    "type": "string"
+                  },
+                  "f1764": {
+                    "type": "string"
+                  },
+                  "f1765": {
+                    "type": "string"
+                  },
+                  "f1766": {
+                    "type": "string"
+                  },
+                  "f1767": {
+                    "type": "string"
+                  },
+                  "f1768": {
+                    "type": "string"
+                  },
+                  "f1769": {
+                    "type": "string"
+                  },
+                  "f1770": {
+                    "type": "string"
+                  },
+                  "f1771": {
+                    "type": "string"
+                  },
+                  "f1772": {
+                    "type": "string"
+                  },
+                  "f1773": {
+                    "type": "string"
+                  },
+                  "f1774": {
+                    "type": "string"
+                  },
+                  "f21": {
+                    "type": "string"
+                  },
+                  "f22": {
+                    "type": "string"
+                  },
+                  "f23": {
+                    "type": "string"
+                  },
+                  "f24": {
+                    "type": "string"
+                  },
+                  "f25": {
+                    "type": "string"
+                  },
+                  "f26": {
+                    "type": "string"
+                  },
+                  "f27": {
+                    "type": "string"
+                  },
+                  "f301": {
+                    "type": "string"
+                  },
+                  "f302": {
+                    "type": "string"
+                  },
+                  "f303": {
+                    "type": "string"
+                  },
+                  "f401": {
+                    "type": "string"
+                  },
+                  "f402": {
+                    "type": "string"
+                  },
+                  "f403": {
+                    "type": "string"
+                  },
+                  "f404": {
+                    "type": "string"
+                  },
+                  "f405": {
+                    "type": "string"
+                  },
+                  "f406": {
+                    "type": "string"
+                  },
+                  "f407": {
+                    "type": "string"
+                  },
+                  "f408": {
+                    "type": "string"
+                  },
+                  "f409": {
+                    "type": "string"
+                  },
+                  "f410": {
+                    "type": "string"
+                  },
+                  "f411": {
+                    "type": "string"
+                  },
+                  "f412": {
+                    "type": "string"
+                  },
+                  "f413": {
+                    "type": "string"
+                  },
+                  "f414": {
+                    "type": "string"
+                  },
+                  "f415": {
+                    "type": "string"
+                  },
+                  "f416": {
+                    "type": "string"
+                  },
+                  "f6": {
+                    "type": "string"
+                  },
+                  "f7": {
+                    "type": "string"
+                  },
+                  "f7a": {
+                    "type": "string"
+                  },
+                  "f1001": {
+                    "type": "string"
+                  },
+                  "f1002": {
+                    "type": "string"
+                  },
+                  "f1601": {
+                    "type": "string"
+                  },
+                  "f1602": {
+                    "type": "string"
+                  },
+                  "f1603": {
+                    "type": "string"
+                  },
+                  "f1604": {
+                    "type": "string"
+                  },
+                  "f1605": {
+                    "type": "string"
+                  },
+                  "f1606": {
+                    "type": "string"
+                  },
+                  "f1607": {
+                    "type": "string"
+                  },
+                  "f1608": {
+                    "type": "string"
+                  },
+                  "f1609": {
+                    "type": "string"
+                  },
+                  "f1610": {
+                    "type": "string"
+                  },
+                  "f1611": {
+                    "type": "string"
+                  },
+                  "f1612": {
+                    "type": "string"
+                  },
+                  "f1613": {
+                    "type": "string"
+                  },
+                  "f1614": {
+                    "type": "string"
+                  },
+                  "studentId": {
+                    "type": "string"
+                  }
+                }
+              },
+              "example": {
+                "nimhsmsmh": "20502201008",
+                "kdptimsmh": "161002",
+                "tahun_lulus": "2022",
+                "kdpstmsmh": "57201",
+                "nmmhsmsmh": "Sheilakathryn Heppner",
+                "telpomsmh": "081234567899",
+                "emailmsmh": "sheila@contoh.com",
+                "nik": "7171098765432100",
+                "npwp": "01.234.567.8-123.000",
+                "f8": "1",
+                "f504": "1",
+                "f502": "2 Bulan",
+                "f505": "Rp 1.000.000",
+                "f506": "",
+                "f5a1": "Sulawesi Utara",
+                "f5a2": "Kota Manado",
+                "f1101": "1",
+                "f1102": "",
+                "f5b": "Klabat Tekno",
+                "f5c": "CEO",
+                "f5d": "Tinggi",
+                "f18a": "Orang Tua",
+                "f18b": "Universitas Klabat",
+                "f18c": "Management",
+                "f18d": "12/01/2026",
+                "f1201": "1",
+                "f1202": "",
+                "f14": "1",
+                "f15": "2",
+                "f1761": "1",
+                "f1762": "2",
+                "f1763": "3",
+                "f1764": "4",
+                "f1765": "5",
+                "f1766": "1",
+                "f1767": "2",
+                "f1768": "3",
+                "f1769": "4",
+                "f1770": "5",
+                "f1771": "1",
+                "f1772": "2",
+                "f1773": "3",
+                "f1774": "4",
+                "f21": "1",
+                "f22": "2",
+                "f23": "3",
+                "f24": "4",
+                "f25": "5",
+                "f26": "2",
+                "f27": "4",
+                "f301": "3",
+                "f302": "",
+                "f303": "",
+                "f401": "1",
+                "f402": "0",
+                "f403": "0",
+                "f404": "0",
+                "f405": "0",
+                "f406": "0",
+                "f407": "0",
+                "f408": "0",
+                "f409": "0",
+                "f410": "0",
+                "f411": "0",
+                "f412": "0",
+                "f413": "0",
+                "f414": "0",
+                "f415": "0",
+                "f416": "0",
+                "f6": "2",
+                "f7": "1",
+                "f7a": "1",
+                "f1001": "4",
+                "f1002": "",
+                "f1601": "1",
+                "f1602": "0",
+                "f1603": "0",
+                "f1604": "0",
+                "f1605": "0",
+                "f1606": "0",
+                "f1607": "0",
+                "f1608": "0",
+                "f1609": "0",
+                "f1610": "0",
+                "f1611": "0",
+                "f1612": "0",
+                "f1613": "0",
+                "f1614": "0",
+                "studentId": "20502201008"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Sukses submit tracer study",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "kdptimsmh": {
+                          "type": "string"
+                        },
+                        "kdpstmsmh": {
+                          "type": "string"
+                        },
+                        "nimhsmsmh": {
+                          "type": "string"
+                        },
+                        "nmmhsmsmh": {
+                          "type": "string"
+                        },
+                        "telpomsmh": {
+                          "type": "string"
+                        },
+                        "emailmsmh": {
+                          "type": "string"
+                        },
+                        "tahun_lulus": {
+                          "type": "string"
+                        },
+                        "nik": {
+                          "type": "string"
+                        },
+                        "npwp": {
+                          "type": "string"
+                        },
+                        "f8": {
+                          "type": "string"
+                        },
+                        "f504": {
+                          "type": "string"
+                        },
+                        "f502": {
+                          "type": "string"
+                        },
+                        "f505": {
+                          "type": "string"
+                        },
+                        "f506": {
+                          "type": "string"
+                        },
+                        "f5a1": {
+                          "type": "string"
+                        },
+                        "f5a2": {
+                          "type": "string"
+                        },
+                        "f1101": {
+                          "type": "string"
+                        },
+                        "f1102": {
+                          "type": "string"
+                        },
+                        "f5b": {
+                          "type": "string"
+                        },
+                        "f5c": {
+                          "type": "string"
+                        },
+                        "f5d": {
+                          "type": "string"
+                        },
+                        "f18a": {
+                          "type": "string"
+                        },
+                        "f18b": {
+                          "type": "string"
+                        },
+                        "f18c": {
+                          "type": "string"
+                        },
+                        "f18d": {
+                          "type": "string"
+                        },
+                        "f1201": {
+                          "type": "string"
+                        },
+                        "f1202": {
+                          "type": "string"
+                        },
+                        "f14": {
+                          "type": "string"
+                        },
+                        "f15": {
+                          "type": "string"
+                        },
+                        "f1761": {
+                          "type": "string"
+                        },
+                        "f1762": {
+                          "type": "string"
+                        },
+                        "f1763": {
+                          "type": "string"
+                        },
+                        "f1764": {
+                          "type": "string"
+                        },
+                        "f1765": {
+                          "type": "string"
+                        },
+                        "f1766": {
+                          "type": "string"
+                        },
+                        "f1767": {
+                          "type": "string"
+                        },
+                        "f1768": {
+                          "type": "string"
+                        },
+                        "f1769": {
+                          "type": "string"
+                        },
+                        "f1770": {
+                          "type": "string"
+                        },
+                        "f1771": {
+                          "type": "string"
+                        },
+                        "f1772": {
+                          "type": "string"
+                        },
+                        "f1773": {
+                          "type": "string"
+                        },
+                        "f1774": {
+                          "type": "string"
+                        },
+                        "f21": {
+                          "type": "string"
+                        },
+                        "f22": {
+                          "type": "string"
+                        },
+                        "f23": {
+                          "type": "string"
+                        },
+                        "f24": {
+                          "type": "string"
+                        },
+                        "f25": {
+                          "type": "string"
+                        },
+                        "f26": {
+                          "type": "string"
+                        },
+                        "f27": {
+                          "type": "string"
+                        },
+                        "f301": {
+                          "type": "string"
+                        },
+                        "f302": {
+                          "type": "string"
+                        },
+                        "f303": {
+                          "type": "string"
+                        },
+                        "f401": {
+                          "type": "string"
+                        },
+                        "f402": {
+                          "type": "string"
+                        },
+                        "f403": {
+                          "type": "string"
+                        },
+                        "f404": {
+                          "type": "string"
+                        },
+                        "f405": {
+                          "type": "string"
+                        },
+                        "f406": {
+                          "type": "string"
+                        },
+                        "f407": {
+                          "type": "string"
+                        },
+                        "f408": {
+                          "type": "string"
+                        },
+                        "f409": {
+                          "type": "string"
+                        },
+                        "f410": {
+                          "type": "string"
+                        },
+                        "f411": {
+                          "type": "string"
+                        },
+                        "f412": {
+                          "type": "string"
+                        },
+                        "f413": {
+                          "type": "string"
+                        },
+                        "f414": {
+                          "type": "string"
+                        },
+                        "f415": {
+                          "type": "string"
+                        },
+                        "f416": {
+                          "type": "string"
+                        },
+                        "f6": {
+                          "type": "string"
+                        },
+                        "f7": {
+                          "type": "string"
+                        },
+                        "f7a": {
+                          "type": "string"
+                        },
+                        "f1001": {
+                          "type": "string"
+                        },
+                        "f1002": {
+                          "type": "string"
+                        },
+                        "f1601": {
+                          "type": "string"
+                        },
+                        "f1602": {
+                          "type": "string"
+                        },
+                        "f1603": {
+                          "type": "string"
+                        },
+                        "f1604": {
+                          "type": "string"
+                        },
+                        "f1605": {
+                          "type": "string"
+                        },
+                        "f1606": {
+                          "type": "string"
+                        },
+                        "f1607": {
+                          "type": "string"
+                        },
+                        "f1608": {
+                          "type": "string"
+                        },
+                        "f1609": {
+                          "type": "string"
+                        },
+                        "f1610": {
+                          "type": "string"
+                        },
+                        "f1611": {
+                          "type": "string"
+                        },
+                        "f1612": {
+                          "type": "string"
+                        },
+                        "f1613": {
+                          "type": "string"
+                        },
+                        "f1614": {
+                          "type": "string"
+                        },
+                        "created_at": {
+                          "type": "string"
+                        },
+                        "studentId": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "status": "Your data has submitted, thank you",
+                  "data": {
+                    "id": "4db390af-a063-4910-b7ce-ab619de3a056",
+                    "kdptimsmh": "161002",
+                    "kdpstmsmh": "57201",
+                    "nimhsmsmh": "20502201008",
+                    "nmmhsmsmh": "Sheilakathryn Heppner",
+                    "telpomsmh": "081234567899",
+                    "emailmsmh": "sheila@contoh.com",
+                    "tahun_lulus": "2022",
+                    "nik": "7171098765432100",
+                    "npwp": "01.234.567.8-123.000",
+                    "f8": "1",
+                    "f504": "1",
+                    "f502": "2 Bulan",
+                    "f505": "Rp 1.000.000",
+                    "f506": "",
+                    "f5a1": "Sulawesi Utara",
+                    "f5a2": "Kota Manado",
+                    "f1101": "1",
+                    "f1102": "",
+                    "f5b": "Klabat Tekno",
+                    "f5c": "CEO",
+                    "f5d": "Tinggi",
+                    "f18a": "Orang Tua",
+                    "f18b": "Universitas Klabat",
+                    "f18c": "Management",
+                    "f18d": "12/01/2026",
+                    "f1201": "1",
+                    "f1202": "",
+                    "f14": "1",
+                    "f15": "2",
+                    "f1761": "1",
+                    "f1762": "2",
+                    "f1763": "3",
+                    "f1764": "4",
+                    "f1765": "5",
+                    "f1766": "1",
+                    "f1767": "2",
+                    "f1768": "3",
+                    "f1769": "4",
+                    "f1770": "5",
+                    "f1771": "1",
+                    "f1772": "2",
+                    "f1773": "3",
+                    "f1774": "4",
+                    "f21": "1",
+                    "f22": "2",
+                    "f23": "3",
+                    "f24": "4",
+                    "f25": "5",
+                    "f26": "2",
+                    "f27": "4",
+                    "f301": "3",
+                    "f302": "",
+                    "f303": "",
+                    "f401": "1",
+                    "f402": "0",
+                    "f403": "0",
+                    "f404": "0",
+                    "f405": "0",
+                    "f406": "0",
+                    "f407": "0",
+                    "f408": "0",
+                    "f409": "0",
+                    "f410": "0",
+                    "f411": "0",
+                    "f412": "0",
+                    "f413": "0",
+                    "f414": "0",
+                    "f415": "0",
+                    "f416": "0",
+                    "f6": "2",
+                    "f7": "1",
+                    "f7a": "1",
+                    "f1001": "4",
+                    "f1002": "",
+                    "f1601": "1",
+                    "f1602": "0",
+                    "f1603": "0",
+                    "f1604": "0",
+                    "f1605": "0",
+                    "f1606": "0",
+                    "f1607": "0",
+                    "f1608": "0",
+                    "f1609": "0",
+                    "f1610": "0",
+                    "f1611": "0",
+                    "f1612": "0",
+                    "f1613": "0",
+                    "f1614": "0",
+                    "created_at": "2023-11-05T13:54:17.019Z",
+                    "studentId": "20502201008"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "filkomAuth": {
+        "description": "Authentication for FILKOM APP RESTful API",
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "GeneralError": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "error": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
