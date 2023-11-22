@@ -8,13 +8,20 @@ var indexRouter = require("./app/welcome/router");
 
 var app = express();
 
+const CSS_URL =
+  "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.1.0/swagger-ui.min.css";
+
+const options = {
+  customCssUrl: CSS_URL,
+};
+
 // dokumentasi
 const swaggerUi = require("swagger-ui-express");
 const swaggerSpecs = require("./public/doc/filkom-api-doc.json");
 
 // Middleware untuk menampilkan Spesifikasi API dengan Swagger UI
 app.use("/api-docs", swaggerUi.serve);
-app.get("/api-docs", swaggerUi.setup(swaggerSpecs));
+app.get("/api-docs", swaggerUi.setup(swaggerSpecs, options));
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
