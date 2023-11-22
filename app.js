@@ -13,7 +13,8 @@ const swaggerUi = require("swagger-ui-express");
 const swaggerSpecs = require("./public/doc/filkom-api-doc.json");
 
 // Middleware untuk menampilkan Spesifikasi API dengan Swagger UI
-app.use("/api-doc", swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
+app.use("/api-docs", swaggerUi.serve);
+app.get("/api-docs", swaggerUi.setup(swaggerSpecs));
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
