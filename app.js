@@ -6,22 +6,39 @@ var logger = require("morgan");
 
 var indexRouter = require("./app/welcome/router");
 
+const {
+  SwaggerUIBundle,
+  SwaggerUIStandalonePreset,
+} = require("swagger-ui-dist");
+const swaggerJsdoc = require("swagger-jsdoc");
+
 var app = express();
 
 const CSS_URL =
   "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.1.0/swagger-ui.min.css";
 
+// Load Swagger JSON documentation from a file
 const options = {
-  customCssUrl: CSS_URL,
+  swaggerDefinition: require("./public/doc/filkom-api-doc.json"),
+  apis: [],
 };
 
 // dokumentasi
 const swaggerUi = require("swagger-ui-express");
-const swaggerSpecs = require("./public/doc/filkom-api-doc.json");
+const swaggerSpec = swaggerJsdoc(options);
 
 // Middleware untuk menampilkan Spesifikasi API dengan Swagger UI
-app.use("/api-docs", swaggerUi.serve);
-app.get("/api-docs", swaggerUi.setup(swaggerSpecs, options));
+// app.use("/api-docs", swaggerUi.serve);
+// app.get("/api-docs", swaggerUi.setup(swaggerSpecs, options));
+
+app.use(
+  "/api-docs",
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerSpec, {
+    customCssUrl:
+      "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.1.0/swagger-ui.min.css",
+  })
+);
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
