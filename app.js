@@ -23,6 +23,8 @@ const options = {
   apis: [],
 };
 
+// triger deployment
+
 // dokumentasi
 const swaggerUi = require("swagger-ui-express");
 const swaggerSpec = swaggerJsdoc(options);
